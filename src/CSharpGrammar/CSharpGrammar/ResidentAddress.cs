@@ -49,5 +49,11 @@ namespace PracticeConsole.Data
 
         // Note that no "default" constructor was created because I wish the program to assign the address will all necessary
         // data at creation time
+
+        public override string ToString()
+        {
+            // comma separate value string (csv)
+            return $"{Number},{Address1},{Address2},{Unit},{City},{ProvinceState}";
+        }
     }
 }
