@@ -1,7 +1,12 @@
-﻿// See https://aka.ms/new-console-template for more information
-DisplayString("Hello, World!");
+﻿using System; // In .net 6 some using statement visible in .net 5 are already implemented in the project and do not
+              // need to be explicitly coded.
+              // There will be times that you will still need to code using statements to explcitly reference other namespaces
+
+// See https://aka.ms/new-console-template for more information
+DisplayString("Hello World!");
+
 
 static void DisplayString(string text)
 {
-    Console.Write(text);
+    Console.WriteLine(text);
 }
