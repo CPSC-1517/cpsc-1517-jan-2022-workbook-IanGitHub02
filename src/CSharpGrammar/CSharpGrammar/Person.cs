@@ -32,7 +32,7 @@ namespace PracticeConsole
         public string FirstName
         {
             get { return _FirstName; }
-            set
+            private set
             {
                 if (Utilities.IsEmpty(value))
                 {
@@ -46,7 +46,7 @@ namespace PracticeConsole
         public string LastName
         {
             get { return _LastName; }
-            set
+            private set
             {
                 if (Utilities.IsEmpty(value))
                 {
@@ -58,10 +58,12 @@ namespace PracticeConsole
         }
 
         // Composite actually uses the other class as a property/field within the definition of the class being defined
+        // The definition of the class being defined
+        // In this example Address is a field (data member)
         public ResidentAddress Address;
 
         // Composition
-        public List<Employment> EmploymentPositions { get; set; }
+        public List<Employment> EmploymentPositions { get; private set; }
 
         //public Person()
         //{
@@ -96,6 +98,17 @@ namespace PracticeConsole
             }
 
             Address = address;
+        }
+
+        public void ChangeName(string firstName, string lastName)
+        {
+            FirstName = firstName.Trim();
+            LastName = lastName.Trim();
+        }
+
+        public void AddEmployment(Employment employment)
+        {
+            EmploymentPositions.Add(employment);
         }
     }
 }
