@@ -9,20 +9,26 @@ using System; // In .net 6 some using statement visible in .net 5 are already im
 // See https://aka.ms/new-console-template for more information
 DisplayString("Hello World!");
 
-//// Fully qualified name
-//// PracticeConsole.Data.Employment job = CreateJob();
-//Employment Job = CreateJob();
-//ResidentAddress Address = CreateAddress();
+// Fully qualified name
+// PracticeConsole.Data.Employment job = CreateJob();
+Employment Job = CreateJob();
+ResidentAddress Address = CreateAddress();
 
-//// Create a Person
-//Person Me = CreatePerson(Job, Address);
-//if (Me != null)
-//    DisplayPerson(Me);
+// Create a Person
+Person Me = CreatePerson(Job, Address);
+if (Me != null)
+    DisplayPerson(Me);
 
 //ArrayReview(Me);
 
-string pathname = CreateCSVFile();
-ReadCSVFile(pathname);
+//string pathname = CreateCSVFile();
+//Console.WriteLine("\nResults of parsing the incoming CSV Employment data file\n");
+//List<Employment> Jobs = ReadCSVFile(pathname);
+//Console.WriteLine("\nResults of good parsed the incoming CSV Employment data\n");
+//foreach (Employment employment in Jobs)
+//{
+//    DisplayString(employment.ToString());
+//}
 
 static void DisplayString(string text)
 {
@@ -75,11 +81,11 @@ Employment CreateJob()
 
     try
     {
-        job = new Employment();
-        DisplayString($"Default good job {job.ToString()}");
+        //job = new Employment();
+        //DisplayString($"Default good job {job.ToString()}");
                 
-        job = new Employment("Boss", SupervisoryLevel.Supervisor, 5.5);
-        DisplayString($"Greedy good job {job.ToString()}");
+        //job = new Employment("Boss", SupervisoryLevel.Supervisor, 5.5);
+        //DisplayString($"Greedy good job {job.ToString()}");
 
         // Checking exeptions
         //// Bad data: title
@@ -102,9 +108,9 @@ Employment CreateJob()
 ResidentAddress CreateAddress()
 {
     ResidentAddress address = new ResidentAddress();
-    DisplayString($"Default address {address.ToString()}");
-    address = new ResidentAddress(10767, "106 ST NW", null, null, "Edmonton", "AB");
-    DisplayString($"Greedy address {address.ToString()}");
+    //DisplayString($"Default address {address.ToString()}");
+    //address = new ResidentAddress(10767, "106 ST NW", null, null, "Edmonton", "AB");
+    //DisplayString($"Greedy address {address.ToString()}");
 
     return address;
 }
@@ -116,20 +122,20 @@ Person CreatePerson(Employment job, ResidentAddress address)
     
     try
     {
-        //// Create a good person using greedy constructor no job list
-        //thePerson = new Person("BryanNoJob", "Mendoza", null, address);
+        // Create a good person using greedy constructor no job list
+        thePerson = new Person("BryanNoJob", "Mendoza", null, address);
 
         //// Create a good person using greedy constructor with an empty job list
         //thePerson = new Person("BryanEmptyJob", "Mendoza", Jobs, address);
 
-        // Create a good person using greedy constructor with a job list
-        Jobs.Add(new Employment("worker", SupervisoryLevel.TeamMember, 2.1));
-        Jobs.Add(new Employment("leader", SupervisoryLevel.TeamLeader, 7.8));
-        Jobs.Add(job);
-        thePerson = new Person("BryanWithJobs", "Mendoza", Jobs, address);
+        //// Create a good person using greedy constructor with a job list
+        //Jobs.Add(new Employment("worker", SupervisoryLevel.TeamMember, 2.1));
+        //Jobs.Add(new Employment("leader", SupervisoryLevel.TeamLeader, 7.8));
+        //Jobs.Add(job);
+        //thePerson = new Person("BryanWithJobs", "Mendoza", Jobs, address);
 
-        //// Exception testing
-        //// No first name
+        // Exception testing
+        // No first name
         //thePerson = new Person(null, "Mendoza", Jobs, address);
         //// No last name
         //thePerson = new Person("Bryan", null, Jobs, address);
@@ -139,17 +145,17 @@ Person CreatePerson(Employment job, ResidentAddress address)
         //// THIS WILL NOT COMPILE
         //thePerson.FirstName = "NewName";
 
-        // Can I use a behaviour (method) to change the contents of a private set property?
-        thePerson.ChangeName("Lowand", "Behold");
+        //// Can I use a behaviour (method) to change the contents of a private set property?
+        //thePerson.ChangeName("Lowand", "Behold");
 
-        // Can I add another job after the person instance was created
-        thePerson.AddEmployment(new("DP IT", SupervisoryLevel.DepartmentHead, 0.8));
-        //thePerson.AddEmployment(new Employment("DP IT", SupervisoryLevel.DepartmentHead, 0.8));
+        //// Can I add another job after the person instance was created
+        //thePerson.AddEmployment(new("DP IT", SupervisoryLevel.DepartmentHead, 0.8));
+        ////thePerson.AddEmployment(new Employment("DP IT", SupervisoryLevel.DepartmentHead, 0.8));
 
-        // Can I change the public field address directly
-        ResidentAddress oldAddress = thePerson.Address;
-        oldAddress.City = "Vancouver";
-        thePerson.Address = oldAddress;
+        //// Can I change the public field address directly
+        //ResidentAddress oldAddress = thePerson.Address;
+        //oldAddress.City = "Vancouver";
+        //thePerson.Address = oldAddress;
     }
     catch (ArgumentException ex) //specific exception message
     {
@@ -266,6 +272,12 @@ string CreateCSVFile()
             csvLines.Add(item.ToString());
         }
 
+        // TESTING FOR BAD INPUT CSV DATA
+        csvLines.Add($"{SupervisoryLevel.Owner},4.5"); //missing a value error
+        csvLines.Add($",{SupervisoryLevel.DepartmentHead},4.5"); //missing text error on Title
+        csvLines.Add($"Bad Years,{SupervisoryLevel.Owner},Bob"); //non-numeric value for Years
+        csvLines.Add($"Bad Years,{SupervisoryLevel.Owner},-4.5"); //negative value for Years
+
         // Write to a csv file requires the System.IO namespaces
         // Writing a file will default the output to the folder that contains the executing .exe file
         // There are several ways to output this file such as using StreamWriter and using the File class
@@ -285,17 +297,51 @@ string CreateCSVFile()
     return Path.GetFullPath(pathname);
 }
 
-void ReadCSVFile(string pathName)
+List<Employment> ReadCSVFile(string pathName)
 {
+    List<Employment> inputList = new List<Employment>();
+
     // Reading a CSV file is similar to writing. One can read ALL lines at one time. There is no need for a StreamReader.
     // One concern would be the size of the expected input file.
     try
     {
         string[] csvFileInput = File.ReadAllLines(pathName);
-        Console.WriteLine("\n\nContents of CSV Employment file:\n");
-        foreach (var item in csvFileInput)
+        //Console.WriteLine("\n\nContents of CSV Employment file:\n");
+
+        // Create a reusable instance of Employment
+        Employment job = null;
+
+        // Item represents a line (record) in the incoming data
+        // Attempt to process EACH line whether any of the incoming lines have an error or not
+        // THUS you will NEED to manage the errors on the individual line as you process that line
+        // AND be able to continue to the NEXT line
+        foreach (var line in csvFileInput)
         {
-            Console.WriteLine(item);
+            //Console.WriteLine(item);
+            try
+            {
+                bool returnedBool = Employment.TryParse(line, out job);
+                // Returned valid is ALREADY a boolean value: it is already True or False
+                // There is no NEED to use a relative operator condition to test the field
+                // (returnedBool == true) is NOT NECESSARY
+                // A relative operator condition RESOLVES to True or False
+                if (returnedBool)
+                {
+                    inputList.Add(job);
+                }
+            }
+            catch (FormatException ex)
+            {
+                Console.WriteLine($"Format error: {ex.Message}");
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine($"Argument invalid error: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Processing Parse error: {ex.Message}");
+            }
         }
     }
     catch (IOException ex)
@@ -306,4 +352,6 @@ void ReadCSVFile(string pathName)
     {
         Console.WriteLine(ex.Message);
     }
+
+    return inputList;
 }
