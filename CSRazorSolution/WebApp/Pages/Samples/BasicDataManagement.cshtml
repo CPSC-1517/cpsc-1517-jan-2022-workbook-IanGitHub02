@@ -1,0 +1,53 @@
+﻿@page
+@model WebApp.Pages.BasicDataManagementModel
+@{
+	ViewData["Title"]  = "Basic Data Management";
+}
+<h1>Basic Data Management</h1>
+
+@*
+	Investigate using forms on a webpage
+
+	Controls: <input> <slect> <button> <form>
+	Helper tags: asp-for asp-page-handler
+
+	<form> parameters: method= indicate how data is transfered to server
+						      get:  visible on Url in plain text
+							  post: embedded within the form objects sent to the server not visible
+					   action= directs the server to the page to process from "" directs current page
+					           optional
+
+	<label> no need for parameters, can have helper tags such as asp-for depending on css stylesheet,
+			you can get different results
+*@
+
+<form method="post">
+	<label>
+		Enter a number <input type="number" asp-for="Num" />
+	</label>
+
+	<label>
+		Select a favourite course; (drop down list)
+		<select asp-for="FavouriteCourse">
+			<option value="">Select.....</option>
+			<option value="1008">COMP1008</option>
+			<option value="1517">CPSC1517</option>
+			<option value="2018">DMIT2018</option>
+		</select>
+	</label>
+
+	<label>
+		Comments
+		<textarea asp-for="Comments" rows="5" cols="100">
+
+		</textarea>
+	</label>
+	<br />
+	<button type="submit" value="uniquevalueA" id="jsIdentityName" name="RequestObjectIdentifier" asp-page-handler="A">Press Me A (submit form)</button>
+	&nbsp;&nbsp;
+	<button type="submit" value="uniquevalueB" id="jsIdentityName" name="RequestObjectIdentifier" asp-page-handler="B">Press Me B (submit form)</button>
+	&nbsp;&nbsp;
+	<button type="submit" value="uniquevalueX" id="jsIdentityName" name="RequestObjectIdentifier">Press Me (submit form)</button>
+</form>
+<br />
+<p>@Model.FeedBack</p>
