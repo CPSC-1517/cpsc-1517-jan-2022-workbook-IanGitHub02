@@ -1,6 +1,24 @@
+#region Additional Namespaces
+using Microsoft.EntityFrameworkCore;
+using WestWindSystem;
+#endregion
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+// Setup the connection string service for the application
+// 1) Retrieve the connection string information from your appsetting.json
+var connectionString = builder.Configuration.GetConnectionString("WWDB");
+
+// 2) Register any "services" you wish to use
+//    In our solution our services will be created (coded) in the class library WestWindSystem
+//    One of these services will be the setup of the database context connection
+//    Another services will be created as the application requires
+
+// This setup can be done here, locally
+// This setup can also be done elsewhere and called from this location *****
+builder.Services.WWBackendDependencies(options => options.UseSqlServer(connectionString));
+
 builder.Services.AddRazorPages();
 
 var app = builder.Build();

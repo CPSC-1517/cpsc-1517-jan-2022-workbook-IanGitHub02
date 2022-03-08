@@ -9,7 +9,9 @@ namespace WebApp.Pages
         // Bound properties have the data automatically transferred from the control into the property
         [BindProperty]
         public int Num { get; set; }
+        [BindProperty]
         public string FavouriteCourse { get; set; }
+        [BindProperty]
         public string Comments { get; set; }
 
         // Annotation TempData is required IF you are processing multiple requests (OnPost followed by OnGet)
